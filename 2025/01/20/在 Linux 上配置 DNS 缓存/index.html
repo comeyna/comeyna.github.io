@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>在 Linux 上配置 DNS 缓存 | 日常记录</title><meta name="author" content="Rahn"><meta name="copyright" content="Rahn"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="在 Linux 上配置 DNS 缓存  在 Linux 中，DNS 缓存通常由 nscd（Name Service Cache Daemon）或 dnsmasq 等工具提供。如果你的 Linux 系统没有自动启用 DNS 缓存，你可以手动安装并配置它。（放弃）  使用 systemd-resolved 配置 DNS 缓存。在某些现代 Linux 发行版（如 Ubuntu 18.04 及以后版本）中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Linux 上配置 DNS 缓存">
+<meta property="og:url" content="https://comeyna.github.io/2025/01/20/%E5%9C%A8%20Linux%20%E4%B8%8A%E9%85%8D%E7%BD%AE%20DNS%20%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:site_name" content="日常记录">
+<meta property="og:description" content="在 Linux 上配置 DNS 缓存  在 Linux 中，DNS 缓存通常由 nscd（Name Service Cache Daemon）或 dnsmasq 等工具提供。如果你的 Linux 系统没有自动启用 DNS 缓存，你可以手动安装并配置它。（放弃）  使用 systemd-resolved 配置 DNS 缓存。在某些现代 Linux 发行版（如 Ubuntu 18.04 及以后版本）中">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://comeyna.github.io/img/6.webp">
+<meta property="article:published_time" content="2025-01-20T10:36:16.000Z">
+<meta property="article:modified_time" content="2025-01-21T06:18:37.000Z">
+<meta property="article:author" content="Rahn">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="缓存">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://comeyna.github.io/img/6.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "在 Linux 上配置 DNS 缓存",
+  "url": "https://comeyna.github.io/2025/01/20/%E5%9C%A8%20Linux%20%E4%B8%8A%E9%85%8D%E7%BD%AE%20DNS%20%E7%BC%93%E5%AD%98/",
+  "image": "https://comeyna.github.io/img/6.webp",
+  "datePublished": "2025-01-20T10:36:16.000Z",
+  "dateModified": "2025-01-21T06:18:37.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Rahn",
+      "url": "https://comeyna.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="https://comeyna.github.io/2025/01/20/%E5%9C%A8%20Linux%20%E4%B8%8A%E9%85%8D%E7%BD%AE%20DNS%20%E7%BC%93%E5%AD%98/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":600,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '在 Linux 上配置 DNS 缓存',
+  isHighlightShrink: undefined,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/style.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 导航</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fa-solid fa-feather"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/bg.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">日常记录</span></a><a class="nav-page-title" href="/"><span class="site-name">在 Linux 上配置 DNS 缓存</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 导航</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fa-solid fa-feather"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">在 Linux 上配置 DNS 缓存</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-20T10:36:16.000Z" title="发表于 2025-01-20 18:36:16">2025-01-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-21T06:18:37.000Z" title="更新于 2025-01-21 14:18:37">2025-01-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">886</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3 分钟</span></span></div></div></div></header><main class="layout hide-aside" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="在-Linux-上配置-DNS-缓存"><a href="#在-Linux-上配置-DNS-缓存" class="headerlink" title="在 Linux 上配置 DNS 缓存"></a>在 Linux 上配置 DNS 缓存</h2><hr>
+<ol>
+<li><p>在 Linux 中，DNS 缓存通常由 nscd（Name Service Cache Daemon）或 dnsmasq 等工具提供。如果你的 Linux 系统没有自动启用 DNS 缓存，你可以手动安装并配置它。（放弃）</p>
+</li>
+<li><p>使用 systemd-resolved 配置 DNS 缓存。在某些现代 Linux 发行版（如 Ubuntu 18.04 及以后版本）中，systemd 提供了 systemd-resolved 服务用于处理 DNS 解析和缓存。你可以通过配置 systemd-resolved 来管理 DNS 缓存。</p>
+</li>
+</ol>
+<hr>
+<h3 id="配置-systemd-resolved-缓存"><a href="#配置-systemd-resolved-缓存" class="headerlink" title="配置 systemd-resolved 缓存"></a>配置 systemd-resolved 缓存</h3><ol>
+<li>打开 systemd-resolved 的配置文件 &#x2F;etc&#x2F;systemd&#x2F;resolved.conf：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/systemd/resolved.conf</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>查找并设置以下选项：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Resolve]</span><br><span class="line">DNS=1.1.1.1</span><br><span class="line">FallbackDNS=8.8.8.8</span><br><span class="line">DNSSEC=<span class="built_in">yes</span></span><br><span class="line">DNSOverTLS=<span class="built_in">yes</span></span><br><span class="line">Cache=<span class="built_in">yes</span></span><br><span class="line">LLMNR=no</span><br><span class="line">MulticastDNS=no</span><br><span class="line">DNSStubListener=no</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DNS：配置主 DNS 服务器的地址。</li>
+<li>FallbackDNS：配置备用 DNS 服务器的地址。</li>
+<li>Cache：启用 DNS 缓存（默认为启用）。</li>
+</ul>
+<ol start="3">
+<li><p>保存并退出文件。</p>
+</li>
+<li><p>重启 systemd-resolved 服务以使更改生效：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart systemd-resolved</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看-DNS-缓存状态"><a href="#查看-DNS-缓存状态" class="headerlink" title="查看 DNS 缓存状态"></a>查看 DNS 缓存状态</h3><p>使用以下命令查看当前 DNS 缓存的状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemd-resolve --status</span><br></pre></td></tr></table></figure>
+
+<h3 id="验证-DNS-缓存工作"><a href="#验证-DNS-缓存工作" class="headerlink" title="验证 DNS 缓存工作"></a>验证 DNS 缓存工作</h3><p>要验证 DNS 缓存是否有效，可以执行以下操作：</p>
+<ol>
+<li>查询 DNS 地址：</li>
+</ol>
+<p>你可以使用 dig 或 nslookup 命令进行 DNS 查询。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig google.com</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>查看缓存：</li>
+</ol>
+<p>使用以下命令查看缓存中的 DNS 记录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nscd -g  <span class="comment"># 对于使用 nscd 的系统</span></span><br><span class="line">systemd-resolve --status  <span class="comment"># 对于使用 systemd-resolved 的系统</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>使用 nscd：可以通过编辑 &#x2F;etc&#x2F;nscd.conf 文件来配置 DNS 缓存。</li>
+<li>使用 systemd-resolved：编辑 &#x2F;etc&#x2F;systemd&#x2F;resolved.conf 来配置 DNS 缓存。</li>
+</ol>
+<p>根据你的系统和需求，选择适合的 DNS 缓存工具，并根据需要调整缓存的过期时间和其他参数。</p>
+<hr>
+<h3 id="手动设置-DNS"><a href="#手动设置-DNS" class="headerlink" title="手动设置 DNS"></a>手动设置 DNS</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nameserver 1.1.1.1</span><br><span class="line">nameserver 1.0.0.1</span><br><span class="line">nameserver 8.8.8.8</span><br><span class="line">nameserver 8.8.4.4</span><br><span class="line">nameserver 2606:4700:4700::1111</span><br><span class="line">nameserver 2001:4860:4860::8888</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="优先级问题"><a href="#优先级问题" class="headerlink" title="优先级问题"></a>优先级问题</h3><p>在 Linux 系统中，systemd-resolved 和 &#x2F;etc&#x2F;resolv.conf 的优先级取决于它们的配置和如何设置。通常，systemd-resolved 作为一个 DNS 解析服务，会通过管理 &#x2F;etc&#x2F;resolv.conf 文件来控制 DNS 配置。</p>
+<p><strong>优先级关系：</strong></p>
+<ol>
+<li><p>systemd-resolved 控制 &#x2F;etc&#x2F;resolv.conf</p>
+<p> 当 systemd-resolved 启用时，它会通过符号链接将 &#x2F;etc&#x2F;resolv.conf 指向 &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;stub-resolv.conf 或 &#x2F;etc&#x2F;systemd&#x2F;resolved.conf（根据系统配置不同而不同）。这样，systemd-resolved 成为系统的默认 DNS 解析器，&#x2F;etc&#x2F;resolv.conf 中的 DNS 配置会被自动管理和覆盖。</p>
+<ul>
+<li>如果 systemd-resolved 启动并且 &#x2F;etc&#x2F;resolv.conf 是一个符号链接，它的配置优先级高。</li>
+<li>此时，您直接修改 &#x2F;etc&#x2F;resolv.conf 文件不会生效，因为它会被 systemd-resolved 自动覆盖。</li>
+</ul>
+</li>
+<li><p>当 systemd-resolved 被禁用时</p>
+<p> 如果您禁用 systemd-resolved，那么 &#x2F;etc&#x2F;resolv.conf 文件会回到传统的手动配置状态。此时，您可以直接编辑 &#x2F;etc&#x2F;resolv.conf 来配置 DNS，且该配置会生效。</p>
+</li>
+</ol>
+<p><strong>综上：</strong></p>
+<ul>
+<li>如果 systemd-resolved 启用，systemd-resolved 控制 DNS 配置，并通过 &#x2F;etc&#x2F;resolv.conf 的符号链接管理 DNS 解析。</li>
+<li>如果 systemd-resolved 被禁用，则 &#x2F;etc&#x2F;resolv.conf 配置直接生效。</li>
+</ul>
+<p>因此，systemd-resolved 配置的优先级通常高于手动修改的 &#x2F;etc&#x2F;resolv.conf，除非您关闭了 systemd-resolved 服务并恢复了传统的 DNS 配置方式。</p>
+<hr>
+<h3 id="安装并启用-nscd："><a href="#安装并启用-nscd：" class="headerlink" title="安装并启用 nscd："></a>安装并启用 nscd：</h3><ol>
+<li>在基于 Debian 系统（如 Ubuntu）上，使用以下命令安装 nscd：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install nscd</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>启动 nscd 服务：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start nscd</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>检查 nscd 是否正在运行：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status nscd</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p></p></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ubuntu/">ubuntu</a><a class="post-meta__tags" href="/tags/DNS/">DNS</a><a class="post-meta__tags" href="/tags/%E7%BC%93%E5%AD%98/">缓存</a></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/01/20/%E6%9C%AC%E5%9C%B0alpine3-21/" title="Alpine Linux 3.21.2"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/39.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Alpine Linux 3.21.2</div></div><div class="info-2"><div class="info-item-1">本地 Alpine Linux 配置  2025.2.1 作为本地主力 Liunx，原因为轻量、自定义。   安装基本工具12apk update &amp;&amp; apk upgradeapk add curl wget nano git zip unzip bash iptables   安装社区工具12# 添加仓库源配置apk add gotop fd   仓库源配置在 Alpine Linux 中，官方的仓库源通常会在 &#x2F;etc&#x2F;apk&#x2F;repositories 文件中进行配置。默认情况下，它会指向 Alpine Linux 官方的主仓库。 1nano /etc/apk/repositories  12http://dl-cdn.alpinelinux.org/alpine/v3.21/mainhttp://dl-cdn.alpinelinux.org/alpine/v3.21/community   VirtualBox 增强工具安装 更新软件包 安装增强工具 设置开启启动 启动增强工具 显示系统服务的当前状态  12345apk...</div></div></div></a><a class="pagination-related" href="/2025/01/21/VPS%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96/" title="VPS 网络优化"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/9.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">VPS 网络优化</div></div><div class="info-2"><div class="info-item-1">TCP 网络优化 要使这些 TCP 设置永久生效，您需要将相应的配置写入 &#x2F;etc&#x2F;sysctl.conf 文件中。然后，通过重新加载配置文件，确保在系统重启后这些设置仍然生效。 以下是将 TCP 设置永久生效的步骤：  1. 编辑 &#x2F;etc&#x2F;sysctl.conf 文件您可以使用文本编辑器（如 vi 或 nano）编辑该文件。 1nano /etc/sysctl.conf  2. 添加配置项将以下设置添加到 sysctl.conf 文件的末尾： 123456789101112131415161718192021222324252627282930313233# 禁用 pingnet.ipv4.icmp_echo_ignore_all = 1# 增加 TCP 接收和发送缓冲区的大小net.core.rmem_max = 16777216net.core.wmem_max = 16777216net.ipv4.tcp_rmem = 4096 87380 16777216net.ipv4.tcp_wmem = 4096 65536...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/01/21/VPS%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96/" title="VPS 网络优化"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/9.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-21</div><div class="info-item-2">VPS 网络优化</div></div><div class="info-2"><div class="info-item-1">TCP 网络优化 要使这些 TCP 设置永久生效，您需要将相应的配置写入 &#x2F;etc&#x2F;sysctl.conf 文件中。然后，通过重新加载配置文件，确保在系统重启后这些设置仍然生效。 以下是将 TCP 设置永久生效的步骤：  1. 编辑 &#x2F;etc&#x2F;sysctl.conf 文件您可以使用文本编辑器（如 vi 或 nano）编辑该文件。 1nano /etc/sysctl.conf  2. 添加配置项将以下设置添加到 sysctl.conf 文件的末尾： 123456789101112131415161718192021222324252627282930313233# 禁用 pingnet.ipv4.icmp_echo_ignore_all = 1# 增加 TCP 接收和发送缓冲区的大小net.core.rmem_max = 16777216net.core.wmem_max = 16777216net.ipv4.tcp_rmem = 4096 87380 16777216net.ipv4.tcp_wmem = 4096 65536...</div></div></div></a></div></div></div></main><footer id="footer"><div id="footer-wrap"></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
