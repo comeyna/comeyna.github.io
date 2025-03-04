@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Termux</title>
+      <link href="/2025/03/04/Termux/"/>
+      <url>/2025/03/04/Termux/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Termux"><a href="#Termux" class="headerlink" title="Termux"></a>Termux</h2><p>运行启动 ssh 和 alist</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano ~/.bashrc</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshd; alist server &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure><hr><p></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 安卓 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> alist </tag>
+            
+            <tag> ssh </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>abd 安装</title>
       <link href="/2025/03/01/adb%E5%AE%89%E8%A3%85/"/>
       <url>/2025/03/01/adb%E5%AE%89%E8%A3%85/</url>
@@ -145,7 +172,7 @@
       <link href="/2025/01/24/SSH%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/"/>
       <url>/2025/01/24/SSH%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/</url>
       
-        <content type="html"><![CDATA[<h2 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h2><hr><h3 id="本地端口转发"><a href="#本地端口转发" class="headerlink" title="本地端口转发"></a>本地端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 8000:127.0.0.1:8807 -p 2500 root@192.227.12.30</span><br></pre></td></tr></table></figure><p>这是一个 SSH 本地端口转发 命令，它的作用是：</p><ul><li>本地端口 8000：让本地机器上的端口 8000 上的流量通过 SSH 隧道转发到远程机器上的 127.0.0.1:8807。</li><li>-p 2500：指定 SSH 连接使用的端口是 2500，而不是默认的 22 端口。</li><li><a href="mailto:&#x72;&#x6f;&#x6f;&#x74;&#64;&#49;&#x39;&#50;&#x2e;&#x32;&#50;&#x37;&#x2e;&#49;&#50;&#46;&#51;&#48;">&#x72;&#x6f;&#x6f;&#x74;&#64;&#49;&#x39;&#50;&#x2e;&#x32;&#50;&#x37;&#x2e;&#49;&#50;&#46;&#51;&#48;</a>：通过 SSH 连接到远程服务器 192.227.12.30，使用 root 用户。</li></ul><p>换句话说，执行这个命令后，本地机器上的端口 8000 会将所有流量转发到远程服务器上的 127.0.0.1:8807。这可以用来将本地请求转发到远程服务器上的服务。</p><hr><h3 id="使用-PuTTY-实现相同的效果"><a href="#使用-PuTTY-实现相同的效果" class="headerlink" title="使用 PuTTY 实现相同的效果"></a>使用 PuTTY 实现相同的效果</h3><p>如果你想要通过 PuTTY 在 Windows 上实现相同的效果，按照以下步骤操作：</p><ol><li><p>打开 PuTTY：启动 PuTTY，进入主界面。</p></li><li><p>设置 SSH 连接：</p><ul><li>在 Host Name (or IP address) 字段中输入远程主机的 IP 地址：192.227.12.30。</li><li>在 Port 字段中输入：2500。</li><li>确保 Connection Type 选择为 SSH。</li></ul></li><li><p>配置端口转发：</p><ul><li>在左侧的菜单中，找到 Connection &gt; SSH &gt; Tunnels。</li><li>在 Source port 字段中输入 8000（本地端口）。</li><li>在 Destination 字段中输入 127.0.0.1:8807（远程主机的地址和端口）。</li><li>确保选择 Local 和 Auto。</li><li>点击 Add 按钮，这样就设置了本地端口转发。</li></ul></li><li><p>保存会话（可选）：如果你希望以后方便连接，可以返回到 Session 部分，在 Saved Sessions 字段中输入一个名字，然后点击 Save。</p></li><li><p>连接：</p><ul><li>点击 Open 按钮以连接到远程主机。</li><li>如果是第一次连接，PuTTY 会提示你接受远程主机的 SSH 密钥，点击 Yes 继续。</li><li>输入用户名和密码（例如：root 用户），完成登录。</li></ul></li></ol><p>完成这些步骤后，本地端口 8000 将会转发到远程主机上的 127.0.0.1:8807，你就可以通过 <a href="http://127.0.0.1:8000/">http://127.0.0.1:8000</a> 访问该远程服务了。</p><hr><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>以这样的方式，就可以不用 IP 、域名访问了。本地就可以访问，一些私密服务完成可以在本地完成。</p><hr><p></p>]]></content>
+        <content type="html"><![CDATA[<h2 id="SSH-端口转发"><a href="#SSH-端口转发" class="headerlink" title="SSH 端口转发"></a>SSH 端口转发</h2><hr><h3 id="本地端口转发"><a href="#本地端口转发" class="headerlink" title="本地端口转发"></a>本地端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -L 8000:127.0.0.1:8807 -p 2500 root@192.227.12.30</span><br></pre></td></tr></table></figure><p>这是一个 SSH 本地端口转发 命令，它的作用是：</p><ul><li>本地端口 8000：让本地机器上的端口 8000 上的流量通过 SSH 隧道转发到远程机器上的 127.0.0.1:8807。</li><li>-p 2500：指定 SSH 连接使用的端口是 2500，而不是默认的 22 端口。</li><li><a href="mailto:&#x72;&#x6f;&#x6f;&#116;&#x40;&#49;&#57;&#50;&#x2e;&#x32;&#50;&#x37;&#x2e;&#49;&#x32;&#46;&#x33;&#x30;">&#x72;&#x6f;&#x6f;&#116;&#x40;&#49;&#57;&#50;&#x2e;&#x32;&#50;&#x37;&#x2e;&#49;&#x32;&#46;&#x33;&#x30;</a>：通过 SSH 连接到远程服务器 192.227.12.30，使用 root 用户。</li></ul><p>换句话说，执行这个命令后，本地机器上的端口 8000 会将所有流量转发到远程服务器上的 127.0.0.1:8807。这可以用来将本地请求转发到远程服务器上的服务。</p><hr><h3 id="使用-PuTTY-实现相同的效果"><a href="#使用-PuTTY-实现相同的效果" class="headerlink" title="使用 PuTTY 实现相同的效果"></a>使用 PuTTY 实现相同的效果</h3><p>如果你想要通过 PuTTY 在 Windows 上实现相同的效果，按照以下步骤操作：</p><ol><li><p>打开 PuTTY：启动 PuTTY，进入主界面。</p></li><li><p>设置 SSH 连接：</p><ul><li>在 Host Name (or IP address) 字段中输入远程主机的 IP 地址：192.227.12.30。</li><li>在 Port 字段中输入：2500。</li><li>确保 Connection Type 选择为 SSH。</li></ul></li><li><p>配置端口转发：</p><ul><li>在左侧的菜单中，找到 Connection &gt; SSH &gt; Tunnels。</li><li>在 Source port 字段中输入 8000（本地端口）。</li><li>在 Destination 字段中输入 127.0.0.1:8807（远程主机的地址和端口）。</li><li>确保选择 Local 和 Auto。</li><li>点击 Add 按钮，这样就设置了本地端口转发。</li></ul></li><li><p>保存会话（可选）：如果你希望以后方便连接，可以返回到 Session 部分，在 Saved Sessions 字段中输入一个名字，然后点击 Save。</p></li><li><p>连接：</p><ul><li>点击 Open 按钮以连接到远程主机。</li><li>如果是第一次连接，PuTTY 会提示你接受远程主机的 SSH 密钥，点击 Yes 继续。</li><li>输入用户名和密码（例如：root 用户），完成登录。</li></ul></li></ol><p>完成这些步骤后，本地端口 8000 将会转发到远程主机上的 127.0.0.1:8807，你就可以通过 <a href="http://127.0.0.1:8000/">http://127.0.0.1:8000</a> 访问该远程服务了。</p><hr><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>以这样的方式，就可以不用 IP 、域名访问了。本地就可以访问，一些私密服务完成可以在本地完成。</p><hr><p></p>]]></content>
       
       
       <categories>
