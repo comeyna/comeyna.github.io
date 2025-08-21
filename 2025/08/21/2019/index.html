@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Windows 10 Enterprise LTSC 2019 | 日常记录</title><meta name="author" content="Rahn"><meta name="copyright" content="Rahn"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="Windows 10 Enterprise LTSC 2019 配置从前的熟练，如今却全然忘记了。  系统环境电脑初始化时，没有我的电脑，右键 -&gt; 个性化 -&gt; 主题 -&gt; 桌面图标设置。  1. kms 激活系统 本地激活  1234slmgr &#x2F;skms 192.168.6.151slmgr &#x2F;ipk M7XTQ-FN8P6-TTKYV-9D4CC-J462Dslmgr &#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 10 Enterprise LTSC 2019">
+<meta property="og:url" content="https://comeyna.github.io/2025/08/21/2019/index.html">
+<meta property="og:site_name" content="日常记录">
+<meta property="og:description" content="Windows 10 Enterprise LTSC 2019 配置从前的熟练，如今却全然忘记了。  系统环境电脑初始化时，没有我的电脑，右键 -&gt; 个性化 -&gt; 主题 -&gt; 桌面图标设置。  1. kms 激活系统 本地激活  1234slmgr &#x2F;skms 192.168.6.151slmgr &#x2F;ipk M7XTQ-FN8P6-TTKYV-9D4CC-J462Dslmgr &#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://comeyna.github.io/img/59.webp">
+<meta property="article:published_time" content="2025-08-21T04:57:20.000Z">
+<meta property="article:modified_time" content="2025-08-21T05:16:00.566Z">
+<meta property="article:author" content="Rahn">
+<meta property="article:tag" content="Windows 10">
+<meta property="article:tag" content="VirtualBox">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://comeyna.github.io/img/59.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Windows 10 Enterprise LTSC 2019",
+  "url": "https://comeyna.github.io/2025/08/21/2019/",
+  "image": "https://comeyna.github.io/img/59.webp",
+  "datePublished": "2025-08-21T04:57:20.000Z",
+  "dateModified": "2025-08-21T05:16:00.566Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Rahn",
+      "url": "https://comeyna.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="https://comeyna.github.io/2025/08/21/2019/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="/pluginsSrc/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":600,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Windows 10 Enterprise LTSC 2019',
+  isHighlightShrink: undefined,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/style.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 导航</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fa-solid fa-feather"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/bg.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">日常记录</span></a><a class="nav-page-title" href="/"><span class="site-name">Windows 10 Enterprise LTSC 2019</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 导航</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fa-solid fa-feather"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Windows 10 Enterprise LTSC 2019</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-21T04:57:20.000Z" title="发表于 2025-08-21 12:57:20">2025-08-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-21T05:16:00.566Z" title="更新于 2025-08-21 13:16:00">2025-08-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Windows/">Windows</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.1 k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4 分钟</span></span></div></div></div></header><main class="layout hide-aside" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Windows-10-Enterprise-LTSC-2019-配置"><a href="#Windows-10-Enterprise-LTSC-2019-配置" class="headerlink" title="Windows 10 Enterprise LTSC 2019 配置"></a>Windows 10 Enterprise LTSC 2019 配置</h1><p>从前的熟练，如今却全然忘记了。</p>
+<hr>
+<h2 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h2><p>电脑初始化时，没有我的电脑，右键 -&gt; 个性化 -&gt; 主题 -&gt; 桌面图标设置。</p>
+<hr>
+<h3 id="1-kms-激活系统"><a href="#1-kms-激活系统" class="headerlink" title="1. kms 激活系统"></a>1. kms 激活系统</h3><blockquote>
+<p>本地激活</p>
+</blockquote>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slmgr /skms <span class="number">192</span>.<span class="number">168</span>.<span class="number">6</span>.<span class="number">151</span></span><br><span class="line">slmgr /ipk M7XTQ-FN8P6-TTKYV-<span class="number">9</span>D4CC-J462D</span><br><span class="line">slmgr /ato</span><br><span class="line">slmgr /xpr</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>网络激活</p>
+</blockquote>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slmgr /skms kms.moerats.com</span><br><span class="line">slmgr /ipk M7XTQ-FN8P6-TTKYV-<span class="number">9</span>D4CC-J462D</span><br><span class="line">slmgr /ato</span><br><span class="line">slmgr /xpr</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-官方软件"><a href="#2-官方软件" class="headerlink" title="2. 官方软件"></a>2. 官方软件</h3><p><a target="_blank" rel="noopener" href="https://notepad-plus-plus.org/downloads/">Notepad++ 官方地址</a><br><a target="_blank" rel="noopener" href="https://www.voidtools.com/zh-cn/">Everything 官方地址</a><br><a target="_blank" rel="noopener" href="https://www.7-zip.org/">7-Zip 官方地址</a><br><a target="_blank" rel="noopener" href="https://picview.org/">PicView 官方地址</a><br><a target="_blank" rel="noopener" href="https://potplayer.daum.net/">PotPlayer 官方地址</a><br><a target="_blank" rel="noopener" href="https://git-scm.com/">Git 官方地址</a><br><a target="_blank" rel="noopener" href="https://github.com/BluePointLilac/ContextMenuManager">ContextMenuManager 官方地址</a><br><a target="_blank" rel="noopener" href="https://github.com/2dust/v2rayN/releases/tag/7.13.7">v2rayN-V7.13.7 官方地址</a><br><a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/download">node-v22.18.0</a><br><a target="_blank" rel="noopener" href="https://github.com/Bush2021/chrome_plus/releases">Chrome++ 1.11.1 官方地址</a><br><a target="_blank" rel="noopener" href="https://github.com/Bush2021/chrome_installer/releases?page=6">Chrome 127</a><br><a target="_blank" rel="noopener" href="https://www.sumatrapdfreader.org/free-pdf-reader">SumatraPDF 官方地址</a><br><a target="_blank" rel="noopener" href="https://www.python.org/">Python 官方地址</a><br><a href="">WinRAR_5.90</a><br><a href="">Yahei Consolas Hybrid</a><br><a href="">苹果简方</a><br><a href="">DirectX Repair V3.9 (Enhanced Edition)</a><br><a target="_blank" rel="noopener" href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html">Putty</a><br><a target="_blank" rel="noopener" href="https://telegram.org/">Telegram</a><br><a href="">trilium</a></p>
+<hr>
+<h3 id="3-删除实时保护"><a href="#3-删除实时保护" class="headerlink" title="3. 删除实时保护"></a>3. 删除实时保护</h3><p>打开 Windows 安全中心 -&gt; 病毒和威胁防护 - &gt; 管理设置 -&gt; 关闭 实时保护 云提供的保护 自动提交样本。</p>
+<p>使用 <a target="_blank" rel="noopener" href="https://github.com/ionuttbara/windows-defender-remover">Defender Remover</a> 删除防火墙。</p>
+<p>管理员模式运行 Script_Run.bat 删除防火墙。</p>
+<hr>
+<h3 id="4-使用-PWD-关闭系统更新与追踪"><a href="#4-使用-PWD-关闭系统更新与追踪" class="headerlink" title="4. 使用 PWD 关闭系统更新与追踪"></a>4. 使用 PWD 关闭系统更新与追踪</h3><p><a target="_blank" rel="noopener" href="https://wpd.app/">PWD 官方</a></p>
+<hr>
+<h3 id="5-安装打字法"><a href="#5-安装打字法" class="headerlink" title="5. 安装打字法"></a>5. 安装打字法</h3><ol>
+<li>安装 google 打字法</li>
+<li>右键打字法 - &gt; 使用嵌入式状态栏。</li>
+<li>导入自定义短语[属性设置 - 词典 - 编辑自定义短语 - 导入]</li>
+<li>将皮肤放置在 C:\Program Files (x86)\Google\Google Pinyin 2\data\Google\Google Pinyin 2\Skins 文件夹内</li>
+<li>去除 微软拼音 -&gt; 语言首选项 -&gt; 中文选项 -&gt; 键盘 -&gt; 删除微软拼音</li>
+<li>任务栏设置 -&gt; 打开或关闭系统图标 -&gt; 关闭 输入设置 定位 操作中心</li>
+</ol>
+<hr>
+<h3 id="6-系统调整"><a href="#6-系统调整" class="headerlink" title="6. 系统调整"></a>6. 系统调整</h3><ol>
+<li>任务栏 -&gt; 搜索 -&gt; 隐藏</li>
+<li>任务栏 -&gt; 显示任务视图按钮 -&gt; 取消勾选</li>
+<li>任务栏 -&gt; 在任务栏上取消人脉 -&gt; 取消勾选</li>
+<li>任务栏设置 -&gt; 任务栏在屏幕上的位置 -&gt; 靠右</li>
+<li>账户信息 -&gt; 添加头像</li>
+<li>登录选项 -&gt; 密码设置为空 -&gt; 自动登录</li>
+<li>登录选项 -&gt; 隐私 -&gt; 更新或重启后，使用我的登录信息自动完成设备设置并重新打开我的应用 -&gt; 关闭</li>
+<li>打开我的电脑 -&gt; 在任务栏上右键 -&gt; 固定到任务栏</li>
+<li>设置 -&gt; 系统 -&gt; 通知和操作 -&gt; 关闭所有通知</li>
+<li>设置 -&gt; 系统 -&gt; 电池和睡眠 -&gt; 屏幕 -&gt; 从不</li>
+<li>设置 -&gt; 系统 -&gt; 电池和睡眠 -&gt; 其他电源设置 -&gt; 高性能</li>
+<li>设置 -&gt; 系统 -&gt; 电池和睡眠 -&gt; 其他电源设置 -&gt; 选择电源按钮的功能 -&gt; 不采取任何操作 -&gt; 保存修改</li>
+<li>设置 -&gt; 系统 -&gt; 电池和睡眠 -&gt; 其他电源设置 -&gt; 选择关闭显示器的时间 -&gt; 从不 -&gt; 保存修改</li>
+<li>设置 -&gt; 系统 -&gt; 多任务处理 -&gt; 关闭</li>
+<li>设置 -&gt; 系统 -&gt; 体验共享 -&gt; 关闭</li>
+<li>设置 -&gt; 设备 -&gt; 自动播放 -&gt; 关闭</li>
+<li>设置 -&gt; 网络和 Internet -&gt; 网络和共享中心 -&gt; 以太网 -&gt; 属性 -&gt; Internet 协议版本4 -&gt; 使用自定义DNS -&gt; 8.8.8.8 8.8.4.4</li>
+<li>设置 -&gt; 网络和 Internet -&gt; VPN -&gt; 关闭</li>
+<li>设置 -&gt; 个性化 -&gt; 锁屏界面 -&gt; 背景图</li>
+<li>设置 -&gt; 应用 -&gt; 默认应用</li>
+<li>设置 -&gt; 应用 -&gt; 离线地图 -&gt; 自动地图更新 -&gt; 关闭</li>
+<li>设置 -&gt; 游戏 -&gt; 游戏栏 -&gt; 关闭</li>
+<li>设置 -&gt; 游戏 -&gt; 游戏模式 -&gt; 关闭</li>
+<li>设置 -&gt; 隐私 -&gt; 墨迹书写和键入个性化 -&gt; 关闭</li>
+<li>设置 -&gt; 隐私 -&gt; 诊断和反馈 -&gt; 反馈频率 -&gt; 从不</li>
+<li>设置 -&gt; 隐私 -&gt; 文档 -&gt; 允许应用访问你的文档库 -&gt; 关闭</li>
+<li>设置 -&gt; 隐私 -&gt; 图片 -&gt; 允许应用访问你的图片库 -&gt; 关闭</li>
+<li>设置 -&gt; 隐私 -&gt; 视频 -&gt; 允许应用访问你的视频库 -&gt; 关闭</li>
+<li>设置 -&gt; 隐私 -&gt; 文件系统 -&gt; 允许应用访问你的文件系统 -&gt; 关闭</li>
+</ol>
+<hr>
+<h3 id="7-安装-hexo"><a href="#7-安装-hexo" class="headerlink" title="7. 安装 hexo"></a>7. 安装 hexo</h3><p><a target="_blank" rel="noopener" href="https://git-scm.com/">Git 官方地址</a><br><a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/download">node-v22.18.0</a></p>
+<p>安装 Git node 后，给 git 挂上代理进行操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy <span class="string">&#x27;socks5://127.0.0.1:10808&#x27;</span></span><br><span class="line">git config --global https.proxy <span class="string">&#x27;socks5://127.0.0.1:10808&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="8-pandoc-ffmpeg-环境变量"><a href="#8-pandoc-ffmpeg-环境变量" class="headerlink" title="8. pandoc ffmpeg 环境变量"></a>8. pandoc ffmpeg 环境变量</h3><p>我的电脑 -&gt; 属性 -&gt; 高级系统设置 -&gt; 环境变量 -&gt; 系统变量 -&gt; Path 双击 -&gt; 新建 -&gt; D:\ffmpeg\bin\ D:\pandoc\</p>
+<p>使用 cmd 进行验证。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -version</span><br><span class="line">pandoc --version</span><br></pre></td></tr></table></figure></article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Windows-10/">Windows 10</a><a class="post-meta__tags" href="/tags/VirtualBox/">VirtualBox</a></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/08/19/VPS%20ubuntu819/" title="VPS Ubuntu 22.04"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/22.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">VPS Ubuntu 22.04</div></div><div class="info-2"><div class="info-item-1">Ubuntu 22.04 2025年8月19日，系统调整。  安装基本工具12apt updateapt install zip unzip git curl wget nmap iptables iptables-persistent -y  修改密码1passwd   下载备份1234wget https://xingyue.serv00.net/ubuntu819.zipunzip ubuntu819.zipwget https://xingyue.serv00.net/ubuntungin819x.zipunzip ubuntungin819x.zip   安装 docker 与 docker compose12345curl -fsSL https://get.docker.com | bash -s dockercurl -L &quot;https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o...</div></div></div></a></nav></div></main><footer id="footer"><div id="footer-wrap"></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/pluginsSrc/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
